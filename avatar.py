@@ -4,7 +4,7 @@ class avatar():
         self.life = int
         self.strength = int
         self.defense = int
-        # TODO
+        # TODO. prueba
         self.weapon = {'Weapon': None}
         self.armor = {'Armor': None}
         
