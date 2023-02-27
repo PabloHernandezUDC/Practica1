@@ -7,8 +7,8 @@ class Avatar():
         self.life = int
         self.strength = int
         self.defense = int
-        self.weapon = None
-        self.armor = None
+        self.weapon = Weapon
+        self.armor = Armor
         
     def get_life(self):
         return self.life
@@ -113,11 +113,14 @@ class Mage(Caster):
         coinFlip = rd.randint(0, 1)
         if coinFlip == 0:
             self.mana += 2
-        
-        arma = self.get_weapon()
-        
-        dmg = self.strength + arma.
-
+                
+        if self.mana > 0:   
+            dmg = self.strength + self.get_weapon().get_power()
+            self.mana -= 1
+        else:
+            dmg = self.strength + 1
+    
+        return dmg
 
     def defend(self):
         print() # TODO
