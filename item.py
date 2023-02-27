@@ -1,52 +1,37 @@
 class item():
-    class weapon():
-        def __init__(self):
-            self.power = int
-            
-        def get_power(self):
-            return self.power
+    def __init__(self, name):
+        self.name = name
         
-        def set_power(self, inputPower):
-            self.get_power = inputPower
-        
-        class sword():
-            def __init__(self):
-                self.name = str
-            def get_name(self):
-                return self.name
-            def set_name(self, inputName):
-                self.name = inputName
+class weapon(item):
+    def __init__(self, name):
+        super().__init__(name)
+        self.power = int
+    def get_power(self):
+        return self.power
+    def set_power(self, inputPower):
+        self.get_power = inputPower
+    
+class sword(weapon):
+    def __init__(self, power):
+        super().__init__(power)
 
-        class wand():
-            def __init__(self):
-                self.name = str
-            def get_name(self):
-                return self.name
-            def set_name(self, inputName):
-                self.name = inputName
-
-    class covering():
-        def __init__(self):
-            self.protection = int
-            
-        def get_protection(self):
-            return self.protection
+class wand(weapon):
+    def __init__(self, power):
+        super().__init__(power)
         
-        def set_protection(self, inputProtection):
-            self.protection = inputProtection
+class covering(item):
+    def __init__(self, name):
+        super().__init__(name)
+        self.protection = int
+    def get_protection(self):
+        return self.protection
+    def set_protection(self, inputProtection):
+        self.protection = inputProtection
+    
+class armor(covering):
+    def __init__(self, protection):
+        super().__init__(protection)
         
-        class armor():
-            def __init__(self):
-                self.name = str
-            def get_name(self):
-                return self.name
-            def set_name(self, inputName):
-                self.name = inputName
-
-        class shield():
-            def __init__(self):
-                self.name = str
-            def get_name(self):
-                return self.name
-            def set_name(self, inputName):
-                self.name = inputName    
+class shield(covering):
+    def __init__(self, protection):
+        super().__init__(protection)
