@@ -1,3 +1,6 @@
+from item import *
+import random as rd
+
 class Avatar():
     def __init__(self):
         self.name = str
@@ -41,10 +44,10 @@ class Avatar():
         self.armor = inputArmor
         
     def attack(self):
-        print() #TODO
+        pass
         
     def defend(self):
-        print() #TODO
+        pass
 
 class Melee(Avatar):
     def __init__(self, name, life, strength, defense, weapon, armor):
@@ -55,10 +58,16 @@ class Melee(Avatar):
         return self.shield
     
     def set_shield(self, inputShield):
-        self.shield = inputShield
+        if isinstance(inputShield, Item.Covering.Shield):
+            self.shield = inputShield
+        else:
+            print('a donde vas eso no es un escudo')
     
     def set_weapon(self, inputWeapon):
-        self.weapon = inputWeapon
+        if isinstance(inputWeapon, Item.Weapon.Sword):
+            self.weapon = inputWeapon
+        else:
+            print('a donde vas eso no es una espada')
 
 class Warrior(Melee):
     def __init__(self, name, life, strength, defense, weapon, armor, shield):
@@ -72,7 +81,7 @@ class Warrior(Melee):
         self.fury = inputFury
         
     def attack(self):
-        print() # TODO
+        return self.strength + Weapon.get_power() + rd.randint(0, self.fury)
 
     def defend(self):
         print() # TODO
@@ -89,14 +98,26 @@ class Caster(Avatar):
         self.mana = inputMana
     
     def set_weapon(self, inputWeapon):
-        self.weapon = inputWeapon
+        if isinstance(inputWeapon, Item.Weapon.Wand):
+            self.weapon = inputWeapon
+        else:
+            print('a donde vas eso no es una varita')
         
 class Mage(Caster):
     def __init__(self, name, life, strength, defense, weapon, armor, mana):
         super().__init__(name, life, strength, defense, weapon, armor, mana)
         
     def attack(self):
-        print() # TODO
+        # 50% de las veces añade 2 de mana
+        # 50% de las veces no añade mana
+        coinFlip = rd.randint(0, 1)
+        if coinFlip == 0:
+            self.mana += 2
+        
+        arma = self.get_weapon()
+        
+        dmg = self.strength + arma.
+
 
     def defend(self):
         print() # TODO
