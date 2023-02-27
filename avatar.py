@@ -46,5 +46,57 @@ class Avatar():
     def defend(self):
         print() #TODO
 
-class Melee():
-    print()# TODO
+class Melee(Avatar):
+    def __init__(self, name, life, strength, defense, weapon, armor):
+        super().__init__(name, life, strength, defense, weapon, armor)
+        self.shield = None
+    
+    def get_shield(self):
+        return self.shield
+    
+    def set_shield(self, inputShield):
+        self.shield = inputShield
+    
+    def set_weapon(self, inputWeapon):
+        self.weapon = inputWeapon
+
+class Warrior(Melee):
+    def __init__(self, name, life, strength, defense, weapon, armor, shield):
+        super().__init__(name, life, strength, defense, weapon, armor, shield)
+        self.fury = int
+        
+    def get_fury(self):
+        return self.fury
+    
+    def set_fury(self, inputFury):
+        self.fury = inputFury
+        
+    def attack(self):
+        print() # TODO
+
+    def defend(self):
+        print() # TODO
+
+class Caster(Avatar):
+    def __init__(self, name, life, strength, defense, weapon, armor):
+        super().__init__(name, life, strength, defense, weapon, armor)
+        self.mana = int
+    
+    def get_mana(self):
+        return self.mana
+    
+    def set_mana(self, inputMana):
+        self.mana = inputMana
+    
+    def set_weapon(self, inputWeapon):
+        self.weapon = inputWeapon
+        
+class Mage(Caster):
+    def __init__(self, name, life, strength, defense, weapon, armor, mana):
+        super().__init__(name, life, strength, defense, weapon, armor, mana)
+        
+    def attack(self):
+        print() # TODO
+
+    def defend(self):
+        print() # TODO
