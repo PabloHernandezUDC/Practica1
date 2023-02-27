@@ -1,8 +1,8 @@
-class item():
+class Item():
     def __init__(self, name):
         self.name = name
         
-class weapon(item):
+class Weapon(Item):
     def __init__(self, name):
         super().__init__(name)
         self.power = int
@@ -11,15 +11,15 @@ class weapon(item):
     def set_power(self, inputPower):
         self.get_power = inputPower
     
-class sword(weapon):
+class Sword(Weapon):
     def __init__(self, power):
         super().__init__(power)
 
-class wand(weapon):
+class Wand(Weapon):
     def __init__(self, power):
         super().__init__(power)
         
-class covering(item):
+class Covering(Item):
     def __init__(self, name):
         super().__init__(name)
         self.protection = int
@@ -28,10 +28,10 @@ class covering(item):
     def set_protection(self, inputProtection):
         self.protection = inputProtection
     
-class armor(covering):
+class Armor(Covering):
     def __init__(self, protection):
         super().__init__(protection)
         
-class shield(covering):
+class Shield(Covering):
     def __init__(self, protection):
         super().__init__(protection)

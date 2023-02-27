@@ -1,12 +1,11 @@
-class avatar():
+class Avatar():
     def __init__(self):
         self.name = str
         self.life = int
         self.strength = int
         self.defense = int
-        # TODO. prueba
-        self.weapon = {'Weapon': None}
-        self.armor = {'Armor': None}
+        self.weapon = None
+        self.armor = None
         
     def get_life(self):
         return self.life
@@ -32,10 +31,20 @@ class avatar():
     def set_defense(self, inputDefense):
         self.defense = inputDefense
 
-    # TODO: acabar las subclases weapon y covering
     def get_weapon(self):
         return self.weapon
     
     def get_armor(self):
         return self.armor
 
+    def set_armor(self, inputArmor):
+        self.armor = inputArmor
+        
+    def attack(self):
+        print() #TODO
+        
+    def defend(self):
+        print() #TODO
+
+class Melee():
+    print()# TODO
