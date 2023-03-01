@@ -2,12 +2,16 @@ from item import *
 import random as rd
 
 class Avatar():
-    def __init__(self):
-        self.name = str
-        self.life = int
-        self.strength = int
-        self.defense = int
+    def __init__(self, name, life, strength, defense, weapon = None, armor = None):
+        self.name = name
+        self.life = life
+        self.strength = strength
+        self.defense = defense
+        if weapon != None:
+            self.weapon = weapon
         self.weapon = Weapon
+        if armor != None:
+            self.armor = armor
         self.armor = Armor
         
     def get_life(self):
@@ -52,7 +56,7 @@ class Avatar():
 class Melee(Avatar):
     def __init__(self, name, life, strength, defense, weapon, armor):
         super().__init__(name, life, strength, defense, weapon, armor)
-        self.shield = None
+        self.shield = Shield
     
     def get_shield(self):
         return self.shield
@@ -70,9 +74,9 @@ class Melee(Avatar):
             print('a donde vas eso no es una espada')
 
 class Warrior(Melee):
-    def __init__(self, name, life, strength, defense, weapon, armor, shield):
+    def __init__(self, name, life, strength, defense, weapon, armor, shield, fury = None):
         super().__init__(name, life, strength, defense, weapon, armor, shield)
-        self.fury = int
+        self.fury = fury
         
     def get_fury(self):
         return self.fury
@@ -84,12 +88,12 @@ class Warrior(Melee):
         return self.strength + Weapon.get_power() + rd.randint(0, self.fury)
 
     def defend(self):
-        print() # TODO
+        return self.get_defense() + self.get_armor().get_protection() + self.get_shield().get_protection()
 
 class Caster(Avatar):
-    def __init__(self, name, life, strength, defense, weapon, armor):
+    def __init__(self, name, life, strength, defense, weapon, armor, mana = None):
         super().__init__(name, life, strength, defense, weapon, armor)
-        self.mana = int
+        self.mana = mana
     
     def get_mana(self):
         return self.mana
@@ -119,8 +123,7 @@ class Mage(Caster):
             self.mana -= 1
         else:
             dmg = self.strength + 1
-    
         return dmg
 
     def defend(self):
-        print() # TODO
+        return self.get_defense() + self.get_armor().get_protection()
