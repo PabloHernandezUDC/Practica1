@@ -9,10 +9,12 @@ class Avatar():
         self.defense = defense
         if weapon != None:
             self.weapon = weapon
-        self.weapon = Weapon
+        else:
+            self.weapon = Weapon
         if armor != None:
             self.armor = armor
-        self.armor = Armor
+        else:
+            self.armor = Armor
         
     def get_life(self):
         return self.life
@@ -54,9 +56,12 @@ class Avatar():
         pass
 
 class Melee(Avatar):
-    def __init__(self, name, life, strength, defense, weapon, armor):
+    def __init__(self, name, life, strength, defense, weapon = None, armor = None, shield = None):
         super().__init__(name, life, strength, defense, weapon, armor)
-        self.shield = Shield
+        if shield != None:
+            self.shield = shield
+        else:
+            self.shield = Shield
     
     def get_shield(self):
         return self.shield
@@ -74,9 +79,12 @@ class Melee(Avatar):
             print('a donde vas eso no es una espada')
 
 class Warrior(Melee):
-    def __init__(self, name, life, strength, defense, weapon, armor, shield, fury = None):
+    def __init__(self, name, life, strength, defense, weapon = None, armor = None, shield = None, fury = None):
         super().__init__(name, life, strength, defense, weapon, armor, shield)
-        self.fury = fury
+        if fury != None:
+            self.fury = fury
+        else:
+            self.fury = int
         
     def get_fury(self):
         return self.fury

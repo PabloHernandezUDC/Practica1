@@ -5,30 +5,55 @@ import random as rd
 def run(path):
     with open(path) as f:
         pjs = f.readlines()
+        fighters = []
         for pj in pjs:
-            parse_params(pj.split())
+            fighters.append(parse_params(pj.split()))
+        # aquí la lista fighters ya ha leído el archivo en cuestión y todos los objetos están creados
+        # ahora toca generar las parejas
+        n_of_simulations = 30
+        # selección de personajes
+        for i in range(n_of_simulations):
+            roll1 = rd.randint(0, len(fighters))
+            roll2 = rd.randint(0, len(fighters))
+            while roll2 == roll1:
+                roll2 = rd.randint(0, len(fighters))
+            attacker = fighters[roll1]
+            defender = fighters[roll2]
+            # combate
+            # vida defensor final = vida defensor inicial - (attack - defend)
+
+
+
+            # creación de items
+        
+        
+            
+            
+   
+
+        
+
     #TODO: Implement simulation here
 
 def parse_params(params):
     name, life, strength, protection = params[1], int(params[2]), int(params[3]), int(params[4])
     if params[0].lower() == "warrior":
         fury = int(params[5])
-        #print ("Create Warrior  [todo]")        
-        currentWarrior = Avatar(name, life, strength, protection)
-        print(currentWarrior.get_life())
-        
-        currentWarrior = Melee(currentWarrior.get_name()) # TODO: poner aqui todos los atributos para intentar pasarlo a warrior
-        
-
+        currentFighter = Warrior(name, life, strength, protection, None, None, None, fury)
         
     elif params[0].lower() == "mage":
         mana = int(params[5])
-        print ("Create Mage [todo]")
+        currentFighter = Mage(name, life, strength, protection, None, None, mana)
+        
     elif params[0].lower() == "priest":
         mana = int(params[5])
-        print ("Create Priest [todo]")
+        print ("Create Priest")
+        #TODO: crear la clase Priest
+        
     else:
         raise ValueError("Avatar '{}' is not valid".format(params[0]))
+    
+    return currentFighter
 
 if __name__ == "__main__":
     run(sys.argv[1])
