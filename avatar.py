@@ -54,15 +54,6 @@ class Avatar():
         
     def defend(self):
         pass
-    
-    
-    def evaluate(self):
-        print('name:', self.get_name())
-        print('life:', self.get_life())
-        print('strength:', self.get_strength())
-        print('defense:', self.get_defense())
-        print('armor:', self.get_armor())
-        print('weapon:', self.get_weapon())
 
 class Melee(Avatar):
     def __init__(self, name, life, strength, defense, weapon = None, armor = None, shield = None):

@@ -3,9 +3,12 @@ class Item():
         self.name = name
         
 class Weapon(Item):
-    def __init__(self, name):
+    def __init__(self, name, power = None):
         super().__init__(name)
-        self.power = int
+        if power != None:
+            self.power = power
+        else:
+            self.power = int
     def get_power(self):
         return self.power
     def set_power(self, inputPower):
