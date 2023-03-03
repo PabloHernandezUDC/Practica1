@@ -54,6 +54,15 @@ class Avatar():
         
     def defend(self):
         pass
+    
+    
+    def evaluate(self):
+        print('name:', self.get_name())
+        print('life:', self.get_life())
+        print('strength:', self.get_strength())
+        print('defense:', self.get_defense())
+        print('armor:', self.get_armor())
+        print('weapon:', self.get_weapon())
 
 class Melee(Avatar):
     def __init__(self, name, life, strength, defense, weapon = None, armor = None, shield = None):
@@ -99,7 +108,12 @@ class Warrior(Melee):
             return self.strength + rd.randint(0, self.fury)
             
     def defend(self):
-        return self.get_defense() + self.get_armor().get_protection() + self.get_shield().get_protection()
+        result = 0
+        if self.get_armor() != Armor:
+            result += self.get_armor().get_protection()
+        elif self.get_shield() != Shield:
+            result += self.get_shield().get_protection()
+        return result + self.get_defense()
 
 class Caster(Avatar):
     def __init__(self, name, life, strength, defense, weapon, armor, mana = None):
@@ -137,4 +151,7 @@ class Mage(Caster):
         return dmg
 
     def defend(self):
-        return self.get_defense() + self.get_armor().get_protection()
+        if self.get_armor() != Armor:
+            return self.get_defense() + self.get_armor().get_protection()
+        else:
+            return self.get_defense()

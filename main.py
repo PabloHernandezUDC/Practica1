@@ -10,9 +10,8 @@ def run(path):
             fighters.append(parse_params(pj.split()))
         # aquí la lista fighters ya ha leído el archivo en cuestión y todos los objetos están creados
         # ahora toca generar las parejas
-        n_of_simulations = 30
         # selección de personajes
-        for i in range(n_of_simulations):
+        while len(fighters) > 1:
             roll1 = rd.randint(0, len(fighters) - 1)
             roll2 = rd.randint(0, len(fighters) - 1)
             while roll2 == roll1:
@@ -21,23 +20,29 @@ def run(path):
             defender = fighters[roll2]
             # combate
             # vida defensor final = vida defensor inicial - (attack - defend)
-            #print(attacker.attack())
+                        
+            remainingDefenderLife = defender.get_life() + defender.defend() - attacker.attack()
             
-            print(defender.defend())
-
+            if remainingDefenderLife <= 0:
+                fighters.remove(defender)
+                print('Quedan {} personas.'.format(len(fighters)))
+                
+                
+                
+                
             # creación de items
-    
+        print('El último superviviente es', fighters)
     #TODO: Implement simulation here
 
 def parse_params(params):
-    name, life, strength, protection = params[1], int(params[2]), int(params[3]), int(params[4])
+    name, life, strength, defense = params[1], int(params[2]), int(params[3]), int(params[4])
     if params[0].lower() == "warrior":
         fury = int(params[5])
-        currentFighter = Warrior(name, life, strength, protection, None, None, None, fury)
+        currentFighter = Warrior(name, life, strength, defense, None, None, None, fury)
         
     elif params[0].lower() == "mage":
         mana = int(params[5])
-        currentFighter = Mage(name, life, strength, protection, None, None, mana)
+        currentFighter = Mage(name, life, strength, defense, None, None, mana)
         
     elif params[0].lower() == "priest":
         mana = int(params[5])
