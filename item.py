@@ -12,26 +12,29 @@ class Weapon(Item):
         self.get_power = inputPower
     
 class Sword(Weapon):
-    def __init__(self, power):
-        super().__init__(power)
+    def __init__(self, name, power):
+        super().__init__(name, power)
 
 class Wand(Weapon):
-    def __init__(self, power):
-        super().__init__(power)
+    def __init__(self, name, power):
+        super().__init__(name, power)
         
 class Covering(Item):
-    def __init__(self, name):
+    def __init__(self, name, protection = None):
         super().__init__(name)
-        self.protection = int
+        if protection != None:
+            self.protection = protection
+        else:
+            self.protection = None
     def get_protection(self):
         return self.protection
     def set_protection(self, inputProtection):
         self.protection = inputProtection
     
 class Armor(Covering):
-    def __init__(self, protection):
-        super().__init__(protection)
+    def __init__(self, name, protection):
+        super().__init__(name, protection)
         
 class Shield(Covering):
-    def __init__(self, protection):
-        super().__init__(protection)
+    def __init__(self, name, protection):
+        super().__init__(name, protection)
