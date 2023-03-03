@@ -93,8 +93,11 @@ class Warrior(Melee):
         self.fury = inputFury
         
     def attack(self):
-        return self.strength + Weapon.get_power() + rd.randint(0, self.fury)
-
+        if self.get_weapon() != Weapon:
+            return self.strength + self.get_weapon().get_power() + rd.randint(0, self.fury)
+        else:
+            return self.strength + rd.randint(0, self.fury)
+            
     def defend(self):
         return self.get_defense() + self.get_armor().get_protection() + self.get_shield().get_protection()
 
@@ -126,7 +129,7 @@ class Mage(Caster):
         if coinFlip == 0:
             self.mana += 2
                 
-        if self.mana > 0:   
+        if self.mana > 0 and self.get_weapon() != Weapon:   
             dmg = self.strength + self.get_weapon().get_power()
             self.mana -= 1
         else:

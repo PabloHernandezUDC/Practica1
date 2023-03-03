@@ -13,26 +13,20 @@ def run(path):
         n_of_simulations = 30
         # selección de personajes
         for i in range(n_of_simulations):
-            roll1 = rd.randint(0, len(fighters))
-            roll2 = rd.randint(0, len(fighters))
+            roll1 = rd.randint(0, len(fighters) - 1)
+            roll2 = rd.randint(0, len(fighters) - 1)
             while roll2 == roll1:
                 roll2 = rd.randint(0, len(fighters))
             attacker = fighters[roll1]
             defender = fighters[roll2]
             # combate
             # vida defensor final = vida defensor inicial - (attack - defend)
-
-
+            #print(attacker.attack())
+            
+            print(defender.defend())
 
             # creación de items
-        
-        
-            
-            
-   
-
-        
-
+    
     #TODO: Implement simulation here
 
 def parse_params(params):
