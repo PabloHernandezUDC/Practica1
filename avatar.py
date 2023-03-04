@@ -67,16 +67,10 @@ class Melee(Avatar):
         return self.shield
     
     def set_shield(self, inputShield):
-        if isinstance(inputShield, Item.Covering.Shield):
-            self.shield = inputShield
-        else:
-            print('a donde vas eso no es un escudo')
+        self.shield = inputShield
     
     def set_weapon(self, inputWeapon):
-        if isinstance(inputWeapon, Item.Weapon.Sword):
-            self.weapon = inputWeapon
-        else:
-            print('a donde vas eso no es una espada')
+        self.weapon = inputWeapon
 
 class Warrior(Melee):
     def __init__(self, name, life, strength, defense, weapon = None, armor = None, shield = None, fury = None):
@@ -118,10 +112,7 @@ class Caster(Avatar):
         self.mana = inputMana
     
     def set_weapon(self, inputWeapon):
-        if isinstance(inputWeapon, Item.Weapon.Wand):
-            self.weapon = inputWeapon
-        else:
-            print('a donde vas eso no es una varita')
+        self.weapon = inputWeapon
         
 class Mage(Caster):
     def __init__(self, name, life, strength, defense, weapon, armor, mana):

@@ -9,19 +9,19 @@ def run(path):
         for pj in pjs:
             fighters.append(parse_params(pj.split()))
         # aquí la lista fighters ya ha leído el archivo en cuestión y todos los objetos están creados
+        
+        # ahora se realiza la simulación hasta que solo quede un personaje
         while len(fighters) > 1:
             # selección de personajes
             roll1 = rd.randint(0, len(fighters) - 1)
             roll2 = rd.randint(0, len(fighters) - 1)
             while roll2 == roll1:
                 roll2 = rd.randint(0, len(fighters) - 1)
-
             attacker = fighters[roll1]
             defender = fighters[roll2]
         
             # combate                        
             remainingDefenderLife = defender.get_life() + defender.defend() - attacker.attack()
-
             if remainingDefenderLife <= 0:
                 fighters.pop(roll2)
                 print('Quedan {} personas.'.format(len(fighters)))
@@ -29,32 +29,44 @@ def run(path):
                 defender.set_life(remainingDefenderLife)
              
             # creación de items
-            # coinflip entre sword (0) y wand (1) 
+            # decidimos entre sword (0) y wand (1) 
             coinFlip = rd.randint(0,1)
             if coinFlip == 0:
                 newWeapon = Sword('Espada', rd.randint(1, 5))
             else:
                 newWeapon = Wand('Varita', rd.randint(1, 5))
             
-            # coinflip entre shield (0) y armor (1) 
+            # decidimos entre shield (0) y armor (1) 
             coinFlip = rd.randint(0,1)
             if coinFlip == 0:
                 newCovering = Shield('Escudo', rd.randint(1, 5))
             else:
                 newCovering = Armor('Armadura', rd.randint(1, 5))
+                            
+            # ahora se las equipamos al atacante
+            if attacker.get_weapon() is Weapon or newWeapon.get_power() > attacker.get_weapon().get_power():
+                if isinstance(attacker, Warrior) and isinstance(newWeapon, Sword):
+                    attacker.set_weapon(newWeapon)
+                elif isinstance(attacker, Mage) and isinstance(newWeapon, Wand):
+                    attacker.set_weapon(newWeapon)
+            else:
+                pass
             
-            # ahora a equipárselos al atacante
-            if isinstance(attacker, Warrior) and isinstance(newWeapon, Sword) and newWeapon.get_power() > attacker.get_weapon().get_power():
-                attacker.set_weapon(newWeapon)
-            elif isinstance(attacker, Mage) and isinstance(newWeapon, Wand) and newWeapon.get_power() > attacker.get_weapon().get_power():
-                attacker.set_weapon(newWeapon)
-                
-            if isinstance(attacker, Warrior) and isinstance(newWeapon, Shield) and newCovering.get_protection() > attacker.get_shield().get_protection():
-                attacker.set_shield(newCovering)
-            elif isinstance(attacker, Mage) and isinstance(newWeapon, Armor) and newCovering.get_protection() > attacker.get_armor().get_protection():
-                attacker.set_armor(newCovering)
-                      
-        print('El último superviviente es', fighters[0].get_name())
+            if isinstance(newCovering, Armor):
+                if attacker.get_armor() is Armor or newCovering.get_protection() > attacker.get_armor().get_protection():
+                    attacker.set_armor(newCovering)
+            elif isinstance(newCovering, Shield) and isinstance(attacker, Warrior):
+                if attacker.get_shield() is Shield or newCovering.get_protection() > attacker.get_shield().get_protection():
+                    attacker.set_shield(newCovering)
+            else:
+                pass
+   
+        winner = fighters[0]
+        print('El último superviviente es', winner.get_name())
+        print('El arma que llevaba equipada era de', winner.get_weapon().get_power())
+        print('El armadura que llevaba equipada era de', winner.get_armor().get_protection())
+        if isinstance(winner, Warrior):
+            print('El escudo que llevaba equipado era de', winner.get_shield().get_protection())
 
 def parse_params(params):
     name, life, strength, defense = params[1], int(params[2]), int(params[3]), int(params[4])
