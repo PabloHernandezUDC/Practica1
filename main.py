@@ -2,6 +2,10 @@ import sys
 from avatar import *
 import random as rd
 
+# Al final de las 30 simulaciones, se pide indicar por pantalla, en orden descendente: (i) el número total 
+# de veces que ha ganado cada PJ, (ii) el daño medio causado por cada PJ y su  desviación típica, (iii) el 
+# número de veces que ha ganado cada clase y (iv) el daño medio por cada clase y su desviación típica.
+
 def run(path):
     with open(path) as f:
         pjs = f.readlines()
@@ -67,6 +71,7 @@ def run(path):
         print('El armadura que llevaba equipada era de', winner.get_armor().get_protection())
         if isinstance(winner, Warrior):
             print('El escudo que llevaba equipado era de', winner.get_shield().get_protection())
+    return winner
 
 def parse_params(params):
     name, life, strength, defense = params[1], int(params[2]), int(params[3]), int(params[4])
