@@ -1,4 +1,4 @@
-import sys
+import sys, statistics
 from avatar import *
 import random as rd
 
@@ -17,6 +17,11 @@ def run(path):
         # aquí la lista fighters ya ha leído el archivo en cuestión y todos los objetos están creados
         # ahora se realiza la simulación hasta que solo quede un personaje
         fighters =  initial_fighters.copy()
+        playerNames = []
+        for i in initial_fighters:
+            playerNames.append(i.get_name())
+        playerStats = {player: [] for player in playerNames}
+
         while len(fighters) > 1:
             # selección de personajes
             roll1 = rd.randint(0, len(fighters) - 1)
@@ -26,8 +31,10 @@ def run(path):
             attacker = fighters[roll1]
             defender = fighters[roll2]
         
-            # combate                        
-            remainingDefenderLife = defender.get_life() + defender.defend() - attacker.attack()
+            # combate
+            daño = attacker.attack()
+            defensa = defender.defend()
+            remainingDefenderLife = defender.get_life() + defensa - daño
             if remainingDefenderLife <= 0:
                 fighters.pop(roll2)
             else:
@@ -65,9 +72,12 @@ def run(path):
                     attacker.set_shield(newCovering)
             else:
                 pass
-   
+            
+            # añadir estadisticas daño
+            playerStats[attacker.get_name()].append(daño)
+            
         winner = fighters[0]
-        return initial_fighters, winner
+        return initial_fighters, winner, playerStats
 
 def parse_params(params):
     name, life, strength, defense = params[1], int(params[2]), int(params[3]), int(params[4])
@@ -93,20 +103,21 @@ if __name__ == "__main__":
     # creamos las variables
     n_of_simulations = 30
     list_of_characters = run(sys.argv[1])[0]
-    winners = {}
+    winners, finalPlayerStats = {}, {}
     winsPerClass = {
         'Warrior': 0,
         'Mage': 0,
         'Priest': 0
-    }
+    }    
     
     # creamos un diccionario con los nombres de todos los personajes y su número de victorias (empieza en cero)
     for element in list_of_characters:
         winners[element.get_name()] = 0
+        finalPlayerStats[element.get_name()] = []
     
     # realizamos las simulaciones correspondientes y modificamos el diccionario
     for i in range(n_of_simulations):
-        winnerName = run(sys.argv[1])[1].get_name()
+        winnerName, ps = run(sys.argv[1])[1].get_name(), run(sys.argv[1])[2]
         winners[winnerName] += 1
         if 'Warrior' in winnerName:
             winsPerClass['Warrior'] += 1
@@ -114,6 +125,17 @@ if __name__ == "__main__":
             winsPerClass['Mage'] += 1
         elif 'Priest' in winnerName:
             winsPerClass['Priest'] += 1
+        
+        # final playerstats de cada bicho += player stats de esta vuelta
+        # le concatena la lista de daño de esta vuelta a la final
+        
+        for i in ps:
+            finalPlayerStats[i] += ps[i]
+
+    for i in finalPlayerStats:
+        dañoMedio = statistics.mean(finalPlayerStats[i])
+        desviacion = statistics.stdev(finalPlayerStats[i], dañoMedio)
+        finalPlayerStats[i] = [dañoMedio, desviacion]
 
     # ordenamos los diccionarios en orden descendente y los imprimimos
     sortedWinners = sorted(winners.items(), key=lambda x:x[1], reverse=True)
@@ -122,6 +144,10 @@ if __name__ == "__main__":
             print('El personaje {one} ha ganado {two} veces.'.format(one = i[0], two = i[1]))
     print('El resto no han ganado nunca.\n')
     
+    for i in finalPlayerStats:
+            print('El personaje {one} ha tenido una media de año de {two}  y una desviación típica de {three}.'.format(one = i, two = finalPlayerStats[i][0], three = finalPlayerStats[i][1]))
+    print()
+
     sortedWinsPerClass = sorted(winsPerClass.items(), key=lambda x:x[1], reverse=True)
     for i in sortedWinsPerClass:
         if i[1] != 0:
