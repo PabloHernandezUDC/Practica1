@@ -2,9 +2,11 @@ import sys
 from avatar import *
 import random as rd
 
-# Al final de las 30 simulaciones, se pide indicar por pantalla, en orden descendente: (i) el número total 
-# de veces que ha ganado cada PJ, (ii) el daño medio causado por cada PJ y su  desviación típica, (iii) el 
-# número de veces que ha ganado cada clase y (iv) el daño medio por cada clase y su desviación típica.
+# Al final de las 30 simulaciones, se pide indicar por pantalla, en orden descendente:
+#   (i) el número total de veces que ha ganado cada PJ
+#   (ii) el daño medio causado por cada PJ y su desviación típica TODO
+#   (iii) el número de veces que ha ganado cada clase
+#   (iv) el daño medio por cada clase y su desviación típica TODO
 
 def run(path):
     with open(path) as f:
@@ -88,18 +90,40 @@ def parse_params(params):
     return currentFighter
 
 if __name__ == "__main__":
+    # creamos las variables
     n_of_simulations = 30
     list_of_characters = run(sys.argv[1])[0]
     winners = {}
+    winsPerClass = {
+        'Warrior': 0,
+        'Mage': 0,
+        'Priest': 0
+    }
     
+    # creamos un diccionario con los nombres de todos los personajes y su número de victorias (empieza en cero)
     for element in list_of_characters:
         winners[element.get_name()] = 0
     
+    # realizamos las simulaciones correspondientes y modificamos el diccionario
     for i in range(n_of_simulations):
-        winners[run(sys.argv[1])[1].get_name()] += 1
-        
-    descendingWinners = sorted(winners.items(), key=lambda x:x[1], reverse=True)
-    for i in descendingWinners:
+        winnerName = run(sys.argv[1])[1].get_name()
+        winners[winnerName] += 1
+        if 'Warrior' in winnerName:
+            winsPerClass['Warrior'] += 1
+        elif 'Mage' in winnerName:
+            winsPerClass['Mage'] += 1
+        elif 'Priest' in winnerName:
+            winsPerClass['Priest'] += 1
+
+    # ordenamos los diccionarios en orden descendente y los imprimimos
+    sortedWinners = sorted(winners.items(), key=lambda x:x[1], reverse=True)
+    for i in sortedWinners:
         if i[1] != 0:
             print('El personaje {one} ha ganado {two} veces.'.format(one = i[0], two = i[1]))
-    print('El resto no han ganado nunca.')
+    print('El resto no han ganado nunca.\n')
+    
+    sortedWinsPerClass = sorted(winsPerClass.items(), key=lambda x:x[1], reverse=True)
+    for i in sortedWinsPerClass:
+        if i[1] != 0:
+            print('La clase {one} ha ganado {two} veces.'.format(one = i[0], two = i[1]))
+    print()
