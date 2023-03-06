@@ -2,12 +2,6 @@ import sys, statistics
 from avatar import *
 import random as rd
 
-# Al final de las 30 simulaciones, se pide indicar por pantalla, en orden descendente:
-#   (i) el número total de veces que ha ganado cada PJ
-#   (ii) el daño medio causado por cada PJ y su desviación típica TODO
-#   (iii) el número de veces que ha ganado cada clase
-#   (iv) el daño medio por cada clase y su desviación típica TODO
-
 def run(path):
     with open(path) as f:
         pjs = f.readlines()
@@ -73,7 +67,6 @@ def run(path):
             else:
                 pass
             
-            # añadir estadisticas daño
             playerStats[attacker.get_name()].append(daño)
             
         winner = fighters[0]
@@ -101,15 +94,23 @@ def parse_params(params):
 
 if __name__ == "__main__":
     # creamos las variables
-    n_of_simulations = 30
+    n_of_simulations = 1000
     list_of_characters = run(sys.argv[1])[0]
     winners, finalPlayerStats = {}, {}
+    usingPriest = False
     winsPerClass = {
         'Warrior': 0,
         'Mage': 0,
         'Priest': 0
     }    
     
+    finalClassStats = {
+        'Warrior': [],
+        'Mage': [],
+    }
+    if usingPriest:
+        finalClassStats['Priest'] = []
+
     # creamos un diccionario con los nombres de todos los personajes y su número de victorias (empieza en cero)
     for element in list_of_characters:
         winners[element.get_name()] = 0
@@ -125,17 +126,26 @@ if __name__ == "__main__":
             winsPerClass['Mage'] += 1
         elif 'Priest' in winnerName:
             winsPerClass['Priest'] += 1
-        
-        # final playerstats de cada bicho += player stats de esta vuelta
-        # le concatena la lista de daño de esta vuelta a la final
-        
+                
         for i in ps:
             finalPlayerStats[i] += ps[i]
+            if 'Warrior' in i:
+                finalClassStats['Warrior'] += ps[i]
+            if 'Mage' in i:
+                finalClassStats['Mage'] += ps[i]
+            if 'Priest' in i  and usingPriest:
+                finalClassStats['Priest'] += ps[i]
 
     for i in finalPlayerStats:
         dañoMedio = statistics.mean(finalPlayerStats[i])
         desviacion = statistics.stdev(finalPlayerStats[i], dañoMedio)
         finalPlayerStats[i] = [dañoMedio, desviacion]
+        
+    for i in finalClassStats:
+        print(i)
+        dañoMedio = statistics.mean(finalClassStats[i])
+        desviacion = statistics.stdev(finalClassStats[i], dañoMedio)
+        finalClassStats[i] = [dañoMedio, desviacion]
 
     # ordenamos los diccionarios en orden descendente y los imprimimos
     sortedWinners = sorted(winners.items(), key=lambda x:x[1], reverse=True)
@@ -147,9 +157,13 @@ if __name__ == "__main__":
     for i in finalPlayerStats:
             print('El personaje {one} ha tenido una media de año de {two}  y una desviación típica de {three}.'.format(one = i, two = finalPlayerStats[i][0], three = finalPlayerStats[i][1]))
     print()
-
+    
     sortedWinsPerClass = sorted(winsPerClass.items(), key=lambda x:x[1], reverse=True)
     for i in sortedWinsPerClass:
         if i[1] != 0:
             print('La clase {one} ha ganado {two} veces.'.format(one = i[0], two = i[1]))
+    print()
+
+    for i in finalClassStats:
+            print('La clase {one} ha tenido una media de año de {two}  y una desviación típica de {three}.'.format(one = i, two = finalClassStats[i][0], three = finalClassStats[i][1]))
     print()
