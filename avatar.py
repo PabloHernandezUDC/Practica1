@@ -137,3 +137,40 @@ class Mage(Caster):
             return self.get_defense() + self.get_armor().get_protection()
         else:
             return self.get_defense()
+        
+class Priest(Caster):
+    def __init__(self, name, life, strength, defense, weapon, armor, mana):
+        super().__init__(name, life, strength, defense, weapon, armor, mana)
+        
+    def attack(self):
+        coinFlip = rd.randint(0, 1)
+        if coinFlip == 0:
+            self.mana += 2
+                
+        if self.mana > 0 and self.get_weapon() != Weapon:   
+            dmg = self.strength + self.get_weapon().get_power()
+            self.mana -= 1
+        else:
+            dmg = self.strength + 1
+        return dmg
+
+    def defend(self):
+        if self.get_armor() != Armor:
+            return self.get_defense() + self.get_armor().get_protection()
+        else:
+            return self.get_defense()
+        
+    def heal(self):
+        coinFlip = rd.randint(0, 1)
+        if coinFlip == 0:
+            self.mana += 2
+                
+        if self.mana > 2 and self.get_weapon() != Weapon:   
+            heal = (self.strength + self.get_weapon().get_power()) / 2
+            self.mana -= 2
+        else:
+            heal = 0
+        
+        self.set_life(self.life + heal)
+        
+        return heal

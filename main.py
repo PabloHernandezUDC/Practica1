@@ -15,6 +15,7 @@ def run(path):
         for i in initial_fighters:
             playerNames.append(i.get_name())
         playerStats = {player: [] for player in playerNames}
+        healStats = {player: [] for player in playerNames}
 
         while len(fighters) > 1:
             # selección de personajes
@@ -26,13 +27,20 @@ def run(path):
             defender = fighters[roll2]
         
             # combate
-            daño = attacker.attack()
-            defensa = defender.defend()
-            remainingDefenderLife = defender.get_life() + defensa - daño
-            if remainingDefenderLife <= 0:
-                fighters.pop(roll2)
+            
+            roll = rd.randint(1, 4)
+            if isinstance(attacker, Priest) and roll == 4:
+                healing = attacker.heal()
+                healStats[attacker.get_name()].append(healing)
+                daño = 0
             else:
-                defender.set_life(remainingDefenderLife)
+                daño = attacker.attack()
+                defensa = defender.defend()
+                remainingDefenderLife = defender.get_life() + defensa - daño
+                if remainingDefenderLife <= 0:
+                    fighters.pop(roll2)
+                else:
+                    defender.set_life(remainingDefenderLife)
              
             # creación de items
             # decidimos entre sword (0) y wand (1) 
@@ -53,7 +61,7 @@ def run(path):
             if attacker.get_weapon() is Weapon or newWeapon.get_power() > attacker.get_weapon().get_power():
                 if isinstance(attacker, Warrior) and isinstance(newWeapon, Sword):
                     attacker.set_weapon(newWeapon)
-                elif isinstance(attacker, Mage) and isinstance(newWeapon, Wand):
+                elif isinstance(attacker, Caster) and isinstance(newWeapon, Wand):
                     attacker.set_weapon(newWeapon)
             else:
                 pass
@@ -67,10 +75,11 @@ def run(path):
             else:
                 pass
             
-            playerStats[attacker.get_name()].append(daño)
+            if daño > 0:
+                playerStats[attacker.get_name()].append(daño)
             
         winner = fighters[0]
-        return initial_fighters, winner, playerStats
+        return initial_fighters, winner, playerStats, healStats
 
 def parse_params(params):
     name, life, strength, defense = params[1], int(params[2]), int(params[3]), int(params[4])
@@ -84,8 +93,7 @@ def parse_params(params):
         
     elif params[0].lower() == "priest":
         mana = int(params[5])
-        print ("Create Priest")
-        #TODO: crear la clase Priest
+        currentFighter = Priest(name, life, strength, defense, None, None, mana)
         
     else:
         raise ValueError("Avatar '{}' is not valid".format(params[0]))
@@ -94,10 +102,10 @@ def parse_params(params):
 
 if __name__ == "__main__":
     # creamos las variables
-    n_of_simulations = 1000
+    n_of_simulations = 30
     list_of_characters = run(sys.argv[1])[0]
-    winners, finalPlayerStats = {}, {}
-    usingPriest = False
+    winners, finalPlayerStats, finalHealStats = {}, {}, {}
+    usingPriest = True
     winsPerClass = {
         'Warrior': 0,
         'Mage': 0,
@@ -110,15 +118,22 @@ if __name__ == "__main__":
     }
     if usingPriest:
         finalClassStats['Priest'] = []
+        
+    finalClassHealStats = {
+        'Warrior': [],
+        'Mage': [],
+        'Priest': []
+    }
 
     # creamos un diccionario con los nombres de todos los personajes y su número de victorias (empieza en cero)
-    for element in list_of_characters:
-        winners[element.get_name()] = 0
-        finalPlayerStats[element.get_name()] = []
+    for i in list_of_characters:
+        winners[i.get_name()] = 0
+        finalPlayerStats[i.get_name()] = []
+        finalHealStats[i.get_name()] = []
     
     # realizamos las simulaciones correspondientes y modificamos el diccionario
     for i in range(n_of_simulations):
-        winnerName, ps = run(sys.argv[1])[1].get_name(), run(sys.argv[1])[2]
+        winnerName, ps, hs = run(sys.argv[1])[1].get_name(), run(sys.argv[1])[2], run(sys.argv[1])[3]
         winners[winnerName] += 1
         if 'Warrior' in winnerName:
             winsPerClass['Warrior'] += 1
@@ -135,6 +150,15 @@ if __name__ == "__main__":
                 finalClassStats['Mage'] += ps[i]
             if 'Priest' in i  and usingPriest:
                 finalClassStats['Priest'] += ps[i]
+                
+        for i in hs:
+            finalHealStats[i] += hs[i]
+            if 'Warrior' in i:
+                finalClassHealStats['Warrior'] += hs[i]
+            if 'Mage' in i:
+                finalClassHealStats['Mage'] += hs[i]
+            if 'Priest' in i  and usingPriest:
+                finalClassHealStats['Priest'] += hs[i]
 
     for i in finalPlayerStats:
         dañoMedio = statistics.mean(finalPlayerStats[i])
@@ -142,10 +166,21 @@ if __name__ == "__main__":
         finalPlayerStats[i] = [dañoMedio, desviacion]
         
     for i in finalClassStats:
-        print(i)
         dañoMedio = statistics.mean(finalClassStats[i])
         desviacion = statistics.stdev(finalClassStats[i], dañoMedio)
         finalClassStats[i] = [dañoMedio, desviacion]
+
+    for i in finalHealStats:
+        if len(finalHealStats[i]) > 0:
+            healMedio = statistics.mean(finalHealStats[i])
+            desviacion = statistics.stdev(finalHealStats[i], healMedio)
+            finalHealStats[i] = [healMedio, desviacion]
+        
+    for i in finalClassHealStats:
+        if len(finalClassHealStats[i]) > 0:
+            healMedio = statistics.mean(finalClassHealStats[i])
+            desviacion = statistics.stdev(finalClassHealStats[i], healMedio)
+            finalClassHealStats[i] = [healMedio, desviacion]
 
     # ordenamos los diccionarios en orden descendente y los imprimimos
     sortedWinners = sorted(winners.items(), key=lambda x:x[1], reverse=True)
@@ -155,7 +190,7 @@ if __name__ == "__main__":
     print('El resto no han ganado nunca.\n')
     
     for i in finalPlayerStats:
-            print('El personaje {one} ha tenido una media de año de {two}  y una desviación típica de {three}.'.format(one = i, two = finalPlayerStats[i][0], three = finalPlayerStats[i][1]))
+            print('El personaje {one} ha tenido una media de daño de {two} y una desviación típica de {three}.'.format(one = i, two = finalPlayerStats[i][0], three = finalPlayerStats[i][1]))
     print()
     
     sortedWinsPerClass = sorted(winsPerClass.items(), key=lambda x:x[1], reverse=True)
@@ -165,5 +200,16 @@ if __name__ == "__main__":
     print()
 
     for i in finalClassStats:
-            print('La clase {one} ha tenido una media de año de {two}  y una desviación típica de {three}.'.format(one = i, two = finalClassStats[i][0], three = finalClassStats[i][1]))
+            print('La clase {one} ha tenido una media de daño de {two} y una desviación típica de {three}.'.format(one = i, two = finalClassStats[i][0], three = finalClassStats[i][1]))
+    print()
+    
+    # healing stats
+    for i in finalHealStats:
+        if len(finalHealStats[i]) > 0:
+            print('El personaje {one} ha tenido una media de curación de {two} y una desviación típica de {three}.'.format(one = i, two = finalHealStats[i][0], three = finalHealStats[i][1]))
+    print()
+    
+    for i in finalClassHealStats:
+        if len(finalClassHealStats[i]) > 0:
+            print('La clase {one} ha tenido una media de curación de {two} y una desviación típica de {three}.'.format(one = i, two = finalClassHealStats[i][0], three = finalClassHealStats[i][1]))
     print()
