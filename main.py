@@ -9,12 +9,12 @@ import random as rd
 def run(path):
     with open(path) as f:
         pjs = f.readlines()
-        fighters = []
+        initial_fighters = []
         for pj in pjs:
-            fighters.append(parse_params(pj.split()))
+            initial_fighters.append(parse_params(pj.split()))
         # aquí la lista fighters ya ha leído el archivo en cuestión y todos los objetos están creados
-        
         # ahora se realiza la simulación hasta que solo quede un personaje
+        fighters =  initial_fighters.copy()
         while len(fighters) > 1:
             # selección de personajes
             roll1 = rd.randint(0, len(fighters) - 1)
@@ -28,7 +28,6 @@ def run(path):
             remainingDefenderLife = defender.get_life() + defender.defend() - attacker.attack()
             if remainingDefenderLife <= 0:
                 fighters.pop(roll2)
-                print('Quedan {} personas.'.format(len(fighters)))
             else:
                 defender.set_life(remainingDefenderLife)
              
@@ -66,12 +65,7 @@ def run(path):
                 pass
    
         winner = fighters[0]
-        print('El último superviviente es', winner.get_name())
-        print('El arma que llevaba equipada era de', winner.get_weapon().get_power())
-        print('El armadura que llevaba equipada era de', winner.get_armor().get_protection())
-        if isinstance(winner, Warrior):
-            print('El escudo que llevaba equipado era de', winner.get_shield().get_protection())
-    return winner
+        return initial_fighters, winner
 
 def parse_params(params):
     name, life, strength, defense = params[1], int(params[2]), int(params[3]), int(params[4])
@@ -94,4 +88,18 @@ def parse_params(params):
     return currentFighter
 
 if __name__ == "__main__":
-    run(sys.argv[1])
+    n_of_simulations = 30
+    list_of_characters = run(sys.argv[1])[0]
+    winners = {}
+    
+    for element in list_of_characters:
+        winners[element.get_name()] = 0
+    
+    for i in range(n_of_simulations):
+        winners[run(sys.argv[1])[1].get_name()] += 1
+        
+    descendingWinners = sorted(winners.items(), key=lambda x:x[1], reverse=True)
+    for i in descendingWinners:
+        if i[1] != 0:
+            print('El personaje {one} ha ganado {two} veces.'.format(one = i[0], two = i[1]))
+    print('El resto no han ganado nunca.')
