@@ -1,8 +1,32 @@
-import sys, statistics
-from avatar import *
 import random as rd
+import statistics
+import sys
+
+from avatar import *
 
 def run(path):
+    '''
+    This function runs one iteration of the combat simulation based on a given text file with a certain format.
+    If the file meets the format criteria, it will be read correctly and characters will be created from the parse_params function.
+ 
+    Parameters 
+    ---------- 
+    path: str 
+        File path for the file that will be used. 
+ 
+    Returns 
+    ------- 
+    initial_fighters: list
+        List with all fighter objects that may be used in some other calculations.
+    winner: Avatar
+        The object for the character which won this simulation.
+    playerStats: dict
+        Dictionary where the keys are the names of all characters involved in the simulation,
+        and the values are lists where each element represents how much damage they dealt in a given combat.
+    healStats: dict
+        Dictionary where the keys are the names of all characters involved in the simulation,
+        and the values are lists where each element represents how much they healed in a given combat.
+    '''
     with open(path) as f:
         pjs = f.readlines()
         initial_fighters = []
@@ -82,6 +106,19 @@ def run(path):
         return initial_fighters, winner, playerStats, healStats
 
 def parse_params(params):
+    '''
+    This function reads a text line with a certain format and creates and Avatar object accordingly.
+ 
+    Parameters 
+    ---------- 
+    params: list
+        List of strings that will be interpreted for Avatar object creation.
+ 
+    Returns 
+    ------- 
+    currentFighter: Avatar
+        Returns an Avatar object where the elements from params are used as attributes.
+    '''
     name, life, strength, defense = params[1], int(params[2]), int(params[3]), int(params[4])
     if params[0].lower() == "warrior":
         fury = int(params[5])
