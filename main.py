@@ -175,7 +175,8 @@ if __name__ == "__main__":
     
     # realizamos las simulaciones correspondientes y modificamos el diccionario
     for i in range(n_of_simulations):
-        winnerName, ps, hs = run(sys.argv[1])[1].get_name(), run(sys.argv[1])[2], run(sys.argv[1])[3]
+        winnerName, ps, hs = run(sys.argv[1])[1:]
+        winnerName = winnerName.get_name()
         winners[winnerName] += 1
         if 'Warrior' in winnerName:
             winsPerClass['Warrior'] += 1
