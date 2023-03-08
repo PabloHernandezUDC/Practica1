@@ -67,18 +67,18 @@ def run(path):
                     defender.set_life(remainingDefenderLife)
              
             # creación de items
-            # decidimos entre sword (0) y wand (1) 
-            coinFlip = rd.randint(0,1)
-            if coinFlip == 0:
+            # 50% de generar un item y 50% de que sea de cada uno de los tipos
+            itemRoll = rd.randint(0,3)
+            if itemRoll == 2:
                 newWeapon = Sword('Espada', rd.randint(1, 5))
-            else:
+            elif itemRoll == 3:
                 newWeapon = Wand('Varita', rd.randint(1, 5))
             
-            # decidimos entre shield (0) y armor (1) 
-            coinFlip = rd.randint(0,1)
-            if coinFlip == 0:
+            # 50% de generar un item y 50% de que sea de cada uno de los tipos
+            itemRoll = rd.randint(0,3)
+            if itemRoll == 2:
                 newCovering = Shield('Escudo', rd.randint(1, 5))
-            else:
+            elif itemRoll == 3:
                 newCovering = Armor('Armadura', rd.randint(1, 5))
                             
             # ahora se las equipamos al atacante
