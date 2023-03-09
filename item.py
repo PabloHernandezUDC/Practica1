@@ -1,3 +1,4 @@
+# Pablo Hernandez Martinez, pablo.hernandez.martinez@udc.es - Marcelo Ferreiro Sánchez, marcelo.fsanchez@udc.es
 class Item():
     '''
     This class serves as a parent class for Weapon and Covering subclasses.
@@ -12,6 +13,7 @@ class Item():
    __init__(self, name):
         Initializes the values for all attributes considering the arguments given.
     '''
+    
     def __init__(self, name):
         '''
         This method initializes the attributes based on the arguments given.
@@ -50,6 +52,7 @@ class Weapon(Item):
     set_power(self, inputPower):
         Sets the value of power to inputPower.      
     '''
+    
     def __init__(self, name, power = None):
         '''
         This method initializes the attributes based on the arguments given.
@@ -70,6 +73,7 @@ class Weapon(Item):
             self.power = power
         else:
             self.power = int
+    
     def get_power(self):
         '''
         Returns the current value of the power attribute.
@@ -84,6 +88,7 @@ class Weapon(Item):
             Current value of power.
         '''
         return self.power
+    
     def set_power(self, inputPower):
         '''
         Sets the value of power to inputPower.      
@@ -117,6 +122,7 @@ class Sword(Weapon):
         Initializes the values for all attributes considering the arguments given.
         name and power are inherited from the parent class.   
     '''
+    
     def __init__(self, name, power):
         '''
         This method initializes the attributes based on the arguments given.
@@ -195,6 +201,7 @@ class Covering(Item):
     set_protection(self, inputProtection):
         Sets the value of protection to inputProtection.      
     '''
+    
     def __init__(self, name, protection = None):
         '''
         This method initializes the attributes based on the arguments given.
@@ -216,6 +223,7 @@ class Covering(Item):
             self.protection = protection
         else:
             self.protection = None
+    
     def get_protection(self):
         '''
         Returns the current value of the protection attribute.
@@ -232,6 +240,7 @@ class Covering(Item):
             Current value of protection.
         '''
         return self.protection
+    
     def set_protection(self, inputProtection):
         '''
         Sets the value of protection to inputProtection.      
@@ -265,6 +274,7 @@ class Armor(Covering):
         Initializes the values for all attributes considering the arguments given.
         name and protection are inherited from the parent class.   
     '''
+    
     def __init__(self, name, protection):
         '''
         This method initializes the attributes based on the arguments given.

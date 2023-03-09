@@ -1,3 +1,4 @@
+# Pablo Hernandez Martinez, pablo.hernandez.martinez@udc.es - Marcelo Ferreiro Sánchez, marcelo.fsanchez@udc.es
 import random as rd
 import statistics
 import sys
@@ -8,7 +9,7 @@ def run(path):
     '''
     This function runs one iteration of the combat simulation based on a given text file with a certain format.
     If the file meets the format criteria, it will be read correctly and characters will be created from the parse_params function.
- 
+
     Parameters 
     ---------- 
     path: str 
@@ -16,16 +17,16 @@ def run(path):
  
     Returns 
     ------- 
-    initial_fighters: list
-        List with all fighter objects that may be used in some other calculations.
-    winner: Avatar
-        The object for the character which won this simulation.
-    playerStats: dict
+    list
+        List with all fighter objects that may be used in some other calculations. (initial_fighters)
+    Avatar
+        The object (winner) for the character who won the current iteration of the simulation.
+    dict
         Dictionary where the keys are the names of all characters involved in the simulation,
-        and the values are lists where each element represents how much damage they dealt in a given combat.
-    healStats: dict
+        and the values are lists where each element represents how much damage they dealt in a given combat. (playerStats)
+    dict
         Dictionary where the keys are the names of all characters involved in the simulation,
-        and the values are lists where each element represents how much they healed in a given combat.
+        and the values are lists where each element represents how much they healed in a given combat. (healStats)
     '''
     with open(path) as f:
         pjs = f.readlines()
@@ -51,7 +52,6 @@ def run(path):
             defender = fighters[roll2]
         
             # combate
-            
             roll = rd.randint(1, 4)
             if isinstance(attacker, Priest) and roll == 4:
                 healing = attacker.heal()
@@ -66,13 +66,14 @@ def run(path):
                 else:
                     defender.set_life(remainingDefenderLife)
              
-            # creación de items
             # 50% de generar un item y 50% de que sea de cada uno de los tipos
             itemRoll = rd.randint(0,3)
             if itemRoll == 2:
                 newWeapon = Sword('Espada', rd.randint(1, 5))
             elif itemRoll == 3:
                 newWeapon = Wand('Varita', rd.randint(1, 5))
+            else:
+                newWeapon = None
             
             # 50% de generar un item y 50% de que sea de cada uno de los tipos
             itemRoll = rd.randint(0,3)
@@ -80,24 +81,23 @@ def run(path):
                 newCovering = Shield('Escudo', rd.randint(1, 5))
             elif itemRoll == 3:
                 newCovering = Armor('Armadura', rd.randint(1, 5))
-                            
-            # ahora se las equipamos al atacante
-            if attacker.get_weapon() is Weapon or newWeapon.get_power() > attacker.get_weapon().get_power():
-                if isinstance(attacker, Warrior) and isinstance(newWeapon, Sword):
-                    attacker.set_weapon(newWeapon)
-                elif isinstance(attacker, Caster) and isinstance(newWeapon, Wand):
-                    attacker.set_weapon(newWeapon)
             else:
-                pass
+                newCovering = None
+
+            if newWeapon is not None:
+                if attacker.get_weapon() is Weapon or newWeapon.get_power() > attacker.get_weapon().get_power():
+                    if isinstance(attacker, Warrior) and isinstance(newWeapon, Sword):
+                        attacker.set_weapon(newWeapon)
+                    elif isinstance(attacker, Caster) and isinstance(newWeapon, Wand):
+                        attacker.set_weapon(newWeapon)
             
-            if isinstance(newCovering, Armor):
-                if attacker.get_armor() is Armor or newCovering.get_protection() > attacker.get_armor().get_protection():
-                    attacker.set_armor(newCovering)
-            elif isinstance(newCovering, Shield) and isinstance(attacker, Warrior):
-                if attacker.get_shield() is Shield or newCovering.get_protection() > attacker.get_shield().get_protection():
-                    attacker.set_shield(newCovering)
-            else:
-                pass
+            if newCovering is not None:
+                if isinstance(newCovering, Armor):
+                    if attacker.get_armor() is Armor or newCovering.get_protection() > attacker.get_armor().get_protection():
+                        attacker.set_armor(newCovering)
+                elif isinstance(newCovering, Shield) and isinstance(attacker, Warrior):
+                    if attacker.get_shield() is Shield or newCovering.get_protection() > attacker.get_shield().get_protection():
+                        attacker.set_shield(newCovering)
             
             if daño > 0:
                 playerStats[attacker.get_name()].append(daño)
@@ -116,8 +116,8 @@ def parse_params(params):
  
     Returns 
     ------- 
-    currentFighter: Avatar
-        Returns an Avatar object where the elements from params are used as attributes.
+    Avatar
+        Returns an Avatar object (currentFighter) where the elements from params are used as attributes.
     '''
     name, life, strength, defense = params[1], int(params[2]), int(params[3]), int(params[4])
     if params[0].lower() == "warrior":
@@ -225,6 +225,7 @@ if __name__ == "__main__":
             desviacion = statistics.stdev(finalClassHealStats[i], healMedio)
             finalClassHealStats[i] = [healMedio, desviacion]
 
+    # se imprimen los datos obtenidos en un formato de "tablas"
     print('\nNº de victorias por personaje:')
     print('--------------------------------------------')
     sortedWinners = sorted(winners.items(), key=lambda x:x[1], reverse=True)
