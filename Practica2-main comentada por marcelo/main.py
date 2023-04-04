@@ -8,20 +8,16 @@ warnings.simplefilter(action='ignore', category=FutureWarning) # just to avoid p
 
 def parse_params(params):
     '''
-    This function reads the data from the text fale containing the information about the flights and hands out that data in a format
+    This function reads the data from the text file containing the information about the flights and hands out that data in a format
     that is functional for the following function.
     ---------- 
-    path: str 
-        File path for the file that will be used. 
+    params: str 
+        Text line with a certain format that will be used for Avion object creation.
  
     Returns 
     ------- 
-    nombre
-        Name of the plane.
-    clase
-        Type of flight.
-    prioridad
-        Priority of the plane.
+    Avion
+        Avion object with several parameters that were fetched from the file that was read
     '''
     nombre, clase = params[0], params[1].lower()
     lista_de_clases = ['domestico', 'privado', 'regular', 'charter', 'transoceanico']
@@ -44,7 +40,7 @@ def run(path):
  
     Returns 
     ------- 
-    Stats:
+    stats:
         All of the information that the exercise requires from the program, Name, Class and Waiting time.
     '''
     with open(path) as f:

@@ -3,15 +3,15 @@ class Cola():
     '''
     Attributes
     ----------
-    Data: Planes in the queue
-    Size: Number of planes in that are in queue
+    Data: objects in the queue
+    Size: Number of objects in that are in queue
 
     Methods
     -------
     update_size: Checks what is the length of the queue and updates the size with that value.
-    enqueue: adds a plane to the queue and updates its size.
-    dequeue: erases a plane from teh queue and updates its size.
-    first: returns the first plane of the queue.
+    enqueue: adds an object to the queue and updates its size.
+    dequeue: erases an object from teh queue and updates its size.
+    first: returns the first object of the queue.
     is_empty: checks if the queue is empty or not.
     '''
     
@@ -22,9 +22,9 @@ class Cola():
         Attributes
         ----------
         self.data: list
-            Used to store the different planes simulating a queue
+            Used to store the different objects simulating a queue
         self.size: int
-            Number of planes in the data list.
+            Number of objects in the data list.
 
         Returns
         -----------
@@ -57,7 +57,7 @@ class Cola():
         Attributes:
         ----------
         e: avion
-            This is the plane that will be put in the queue.
+            This is the object that will be put in the queue.
         Return:
         ----------
         None
@@ -70,10 +70,10 @@ class Cola():
          Attributes:
         ----------
         e: avion
-            This is the plane that will be deleted from the the queue.
+            This is the object that will be deleted from the the queue.
         Return:
         e: avion
-            The deleted plane.
+            The deleted object.
         ----------
         None
         '''
@@ -93,7 +93,7 @@ class Cola():
         Return:
         ----------
         self.data[0]: avion
-            This is the first plane of the queue
+            This is the first object of the queue
         '''
         return self.data[0]
 
@@ -104,6 +104,6 @@ class Cola():
         None
         Returns:
         ----------
-        Returns true or false depending if the list is empty or not.
+        Returns true or false depending if the queue is empty or not.
         '''
         return self.size == 0

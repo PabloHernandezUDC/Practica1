@@ -9,6 +9,12 @@ class Avion():
         Type of flight.
     priority: int
         Priority of the flight.
+    original_entry_time
+        Time at which the plane entered the queue for the first time.
+    new_entry_time
+        Time at which the plane was relocated to a new queue.
+    wait_time
+        Amount of time the plane has waited in total.
 
     Methods:
     ---------
@@ -25,9 +31,9 @@ class Avion():
     set_priority(input_priority):
         changes the priority of a flight
     get_original_entry_time():
-        returns the original entry tome of the plane
+        returns the original entry time of the plane
     set_original_entry_time(input_original_entry_time):
-        changes the original entry tome of the plane
+        changes the original entry time of the plane
     get_new_entry_time():
         returns the new entry time of the flight
     set_new_entry_time(input_new_entry_time):
